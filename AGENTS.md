@@ -133,7 +133,8 @@ DirectX 11 `soh.exe`.
 Current stable-runtime installation:
 
 - Signed standard ReShade 6.8.0 build, loaded through ignored `d3d11.dll`.
-- Runtime preset: ignored `x64\Release\OoT-Stable.ini`.
+- Active runtime preset: ignored `x64\Release\ReShadePreset.ini` (ReShade's
+  first-run default name).
 - Version-controlled preset source: `docs\reshade\OoT-Stable.ini`.
 - Shader sources: the official indexed `crosire/reshade-shaders` slim package
   at commit `6db142b4b1a05c764222e5b0bd9a644b7ccfe1dc` and Marty McFly's qUINT package
@@ -142,14 +143,24 @@ Current stable-runtime installation:
 - MXAO, SSR, depth of field, and other expensive or depth-dependent effects are
   installed but disabled until depth-buffer behavior and performance are tuned.
 - Press `Home` while the stable game is running to open the ReShade overlay.
+- Stable runtime interpolation is explicitly set to 120 FPS with
+  `gSettings.InterpolationFPS=120` and `gSettings.MatchRefreshRate=0`. VSync
+  remains enabled; the current physical NVIDIA display reports 239 Hz, so it
+  does not clamp the 120 FPS target. This changes visual frame presentation,
+  while the game simulation remains at its original 20 Hz.
+- ReShade's FPS counter reports presented/rendered frames, not the 20 Hz game
+  logic tick. A steady 20 FPS there means interpolation is not active. The
+  stable runtime's ReShade overlay was visually verified at 120 FPS on
+  2026-09-18 with the preset active.
 - The 2026-09-18 test on the RTX 4070 Ti SUPER loaded ReShade 6.8.0.2158 and
   compiled all three enabled effects successfully. The generated search paths
   must end in one `**`; the installer's `**\**` form failed on this version.
 
 - Do not commit or redistribute the ReShade injector or third-party shader
   binaries.
-- Keep the project-authored preset and documentation committed, and copy the
-  tracked preset into the ignored stable runtime after changes.
+- Keep the project-authored preset and documentation committed, and copy
+  `docs\reshade\OoT-Stable.ini` to the ignored
+  `x64\Release\ReShadePreset.ini` after changes.
 - Favor restrained ambient occlusion, bloom, tonemapping, color grading, and
   sharpening over effects that obscure the image.
 - Maintain a 120 FPS-oriented preset and make expensive effects optional for
