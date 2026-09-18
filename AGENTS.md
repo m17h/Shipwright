@@ -43,7 +43,8 @@ worktrees have distinct purposes:
 - The 3DS-style asset overhaul lives in this folder's ignored runtime `mods`
   directory.
 - ReShade belongs only in this stable runtime unless explicitly testing native
-  lighting interactions. ReShade has not yet been installed as of 2026-09-18.
+  lighting interactions. ReShade 6.8.0 is installed here for DirectX 11 as of
+  2026-09-18 and was verified to load successfully.
 
 ### Native-lighting development version
 
@@ -129,9 +130,26 @@ ReShade is the temporary external graphics layer while native lighting is under
 development. Install it only from `https://reshade.me/` against the stable
 DirectX 11 `soh.exe`.
 
+Current stable-runtime installation:
+
+- Signed standard ReShade 6.8.0 build, loaded through ignored `d3d11.dll`.
+- Runtime preset: ignored `x64\Release\OoT-Stable.ini`.
+- Version-controlled preset source: `docs\reshade\OoT-Stable.ini`.
+- Shader sources: the official indexed `crosire/reshade-shaders` slim package
+  at commit `6db142b4b1a05c764222e5b0bd9a644b7ccfe1dc` and Marty McFly's qUINT package
+  at commit `98fed77b26669202027f575a6d8f590426c21ebd`.
+- Enabled effects, in order: qUINT Lightroom, qUINT Bloom, qUINT DELC Sharpen.
+- MXAO, SSR, depth of field, and other expensive or depth-dependent effects are
+  installed but disabled until depth-buffer behavior and performance are tuned.
+- Press `Home` while the stable game is running to open the ReShade overlay.
+- The 2026-09-18 test on the RTX 4070 Ti SUPER loaded ReShade 6.8.0.2158 and
+  compiled all three enabled effects successfully. The generated search paths
+  must end in one `**`; the installer's `**\**` form failed on this version.
+
 - Do not commit or redistribute the ReShade injector or third-party shader
   binaries.
-- A project-authored preset and documentation may be committed when created.
+- Keep the project-authored preset and documentation committed, and copy the
+  tracked preset into the ignored stable runtime after changes.
 - Favor restrained ambient occlusion, bloom, tonemapping, color grading, and
   sharpening over effects that obscure the image.
 - Maintain a 120 FPS-oriented preset and make expensive effects optional for
