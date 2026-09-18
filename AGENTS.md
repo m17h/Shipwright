@@ -124,6 +124,15 @@ The selected install excludes the Original N64 HUD, Majora Chest, Crescent Moon,
 generic ARIA variant, and base Link texture archive. Art Plus Link models and
 their 3DS texture options replace the base Link texture archive.
 
+The stable runtime sets `gEnhancements.HideTitleScreenCopyright=1`. Our source
+change in `ovl_En_Mag` keeps the original copyright fade/timing state intact but
+skips drawing its separate texture, removing the pack's
+`Nintendo 1998 - 2023 Djipi's 3DS Experience` line from the title screen. The
+switch defaults off when absent, so the original line can be restored without
+reverting code. Continue preserving Djipi and Skilar attribution here and in
+`x64\Release\mods\INSTALLED_3DS_GRAPHICS.md` even though the in-game line is
+hidden.
+
 ## ReShade Policy
 
 ReShade is the temporary external graphics layer while native lighting is under

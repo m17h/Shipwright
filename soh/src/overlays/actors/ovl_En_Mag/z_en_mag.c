@@ -8,6 +8,7 @@
 #include "objects/object_mag/object_mag.h"
 #include <soh/GameVersions.h>
 #include "soh/ResourceManagerHelpers.h"
+#include <libultraship/bridge/consolevariablebridge.h>
 #include <string.h>
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
@@ -651,7 +652,8 @@ void EnMag_DrawInner(Actor* thisx, PlayState* play, Gfx** gfxP) {
     gDPSetPrimColor(gfx++, 0, 0, (s16)this->copyrightAlpha, (s16)this->copyrightAlpha, (s16)this->copyrightAlpha,
                     (s16)this->copyrightAlpha);
 
-    if ((s16)this->copyrightAlpha != 0) {
+    if ((s16)this->copyrightAlpha != 0 &&
+        !CVarGetInteger(CVAR_ENHANCEMENT("HideTitleScreenCopyright"), 0)) {
         gDPLoadTextureBlock(gfx++, COPYRIGHT_TEX, G_IM_FMT_IA, G_IM_SIZ_8b, COPYRIGHT_TEX_WIDTH, 16, 0,
                             G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                             G_TX_NOLOD, G_TX_NOLOD);
