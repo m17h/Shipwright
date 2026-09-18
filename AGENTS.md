@@ -37,6 +37,7 @@ worktrees have distinct purposes:
 
 - Folder: `C:\Users\puzzl\Documents\AI Projects\Shipwright`
 - Branch: `develop`
+- Remote tracking branch: `origin/develop`
 - Executable: `x64\Release\soh.exe`
 - Purpose: the dependable version used for normal play.
 - The 3DS-style asset overhaul lives in this folder's ignored runtime `mods`
@@ -48,6 +49,7 @@ worktrees have distinct purposes:
 
 - Folder: `C:\Users\puzzl\Documents\AI Projects\Shipwright-Lighting`
 - Branch: `graphics/native-lighting`
+- Remote tracking branch: `origin/graphics/native-lighting`
 - Purpose: isolated renderer, shader, shadow, lighting, fog, and post-processing
   development.
 - Build and run a separate executable from this folder.
