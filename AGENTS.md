@@ -217,18 +217,26 @@ incremental direction is:
 
 Initial foundation status as of 2026-09-18:
 
-- The DX11 backend has a disabled-by-default native identity post-processing
-  pass controlled by `gSettings.NativePostProcessing`.
+- The DX11 backend has a disabled-by-default native post-processing pass
+  controlled by `gSettings.NativePostProcessing`.
 - Enabling the pass forces an off-screen game target, resolves MSAA when needed,
   runs a full-screen shader into a presentation texture, and leaves ImGui menus
   outside the processed image.
+- `gSettings.NativePostProcessingDebugView` provides scene color, raw DirectX
+  device depth, and linear view-depth modes. The linear view maps its configurable
+  `gSettings.NativePostProcessingDepthRange` (default 2000 game units) to white.
+- Linear depth uses near/far planes recovered from the widest valid perspective
+  projection loaded during the frame rather than hard-coded camera values.
+- DX11 has separate single-sample and 2x-through-8x MSAA depth readers; the MSAA
+  path uses the nearest sample.
 - OpenGL and Metal currently use the unchanged fallback path.
-- The lighting runtime's ignored configuration enables the identity pass for
-  development testing.
-- A Release build succeeded, and an enabled DirectX 11 run logged the identity
-  pass at 640x480 without runtime errors. A separate 4x MSAA run also passed,
-  exercising the resolve-before-process path. This is not yet a
-  visual-equivalence or long-duration stability result.
+- The lighting runtime's ignored configuration enables the native pass for
+  development testing, selects scene color, and retains a 2000-unit depth range.
+- A Release build succeeded. Scene color, raw depth, and linear depth launched at
+  640x480 and 1x MSAA without runtime errors; linear depth also launched at 4x
+  MSAA. The recovered scene camera logged near 10.00 and far 12860.24, consistent
+  with the fixed-point form of the game's 10/12800 projection. This is not yet a
+  visual-equivalence, depth-image validation, or long-duration stability result.
 - Detailed status, test coverage, and the next milestones are recorded in
   `docs\NATIVE_LIGHTING.md`.
 

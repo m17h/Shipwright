@@ -27,6 +27,12 @@ static std::map<int32_t, const char*> imguiScaleOptions = {
     { 3, "X-Large" },
 };
 
+static const std::map<int32_t, const char*> nativePostProcessingDebugViews = {
+    { 0, "Scene color" },
+    { 1, "Raw device depth" },
+    { 2, "Linear view depth" },
+};
+
 static const std::map<int32_t, const char*> menuThemeOptions = {
     { UIWidgets::Colors::Red, "Red" },
     { UIWidgets::Colors::DarkRed, "Dark Red" },
@@ -382,9 +388,30 @@ void SohMenu::AddMenuSettings() {
         .CVar(CVAR_NATIVE_POST_PROCESSING)
         .RaceDisable(false)
         .Options(CheckboxOptions()
-                     .Tooltip("Runs the game image through Shipwright's native post-processing pipeline. The current "
-                              "foundation pass is visually neutral and supported only by DirectX 11.")
-                     .DefaultValue(false));
+                      .Tooltip("Runs the game image through Shipwright's native post-processing pipeline. The current "
+                               "foundation and depth debug views are supported only by DirectX 11.")
+                      .DefaultValue(false));
+    AddWidget(path, "Native post-processing view", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_NATIVE_POST_PROCESSING_DEBUG_VIEW)
+        .RaceDisable(false)
+        .Options(ComboboxOptions()
+                     .ComboMap(nativePostProcessingDebugViews)
+                     .DefaultIndex(0)
+                     .Tooltip("Scene color preserves the original output. Raw depth displays nonlinear DirectX depth. "
+                              "Linear depth reconstructs view-space distance from the frame's widest perspective "
+                              "projection."));
+    AddWidget(path, "Linear depth display range", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_NATIVE_POST_PROCESSING_DEPTH_RANGE)
+        .RaceDisable(false)
+        .PreFunc([](WidgetInfo& info) {
+            info.isHidden = CVarGetInteger(CVAR_NATIVE_POST_PROCESSING_DEBUG_VIEW, 0) != 2;
+        })
+        .Options(IntSliderOptions()
+                     .Tooltip("View-space distance that maps to white in the linear depth debug view.")
+                     .Min(100)
+                     .Max(12800)
+                     .Step(100)
+                     .DefaultValue(2000));
     auto fps = CVarGetInteger(CVAR_SETTING("InterpolationFPS"), 20);
     const char* fpsFormat = fps == 20 ? "Original (%d)" : "%d";
     AddWidget(path, "Current FPS", WIDGET_CVAR_SLIDER_INT)
