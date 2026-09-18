@@ -54,6 +54,10 @@ worktrees have distinct purposes:
 - Do not install ReShade here by default. Evaluate native rendering with ReShade
   disabled so external post-processing cannot hide regressions.
 - Keep the stable worktree playable while experimental work is incomplete.
+- Verified independent Release runtime: `x64\Release\soh.exe`.
+- The lighting runtime has its own copied configuration and save, plus the same
+  39 selected 3DS-style mod archives for comparable visual testing.
+- A DirectX 11 smoke test passed on 2026-09-18 and closed normally.
 
 Always verify both the absolute working directory and current branch before
 editing, building, committing, or testing.
@@ -67,6 +71,31 @@ editing, building, committing, or testing.
   ReShade binaries, and downloaded third-party mod archives must not be committed.
 - It is acceptable to use a local hard link or copy of the verified ROM in the
   lighting worktree so that its build remains independent.
+
+## Verified Windows Build Procedure
+
+The installed CMake is bundled with Visual Studio Build Tools rather than added
+to the system `PATH`:
+
+`C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe`
+
+From the selected worktree root, configure and build Release with:
+
+```powershell
+$cmake = 'C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'
+& $cmake -S . -B 'build/x64' -G 'Visual Studio 17 2022' -T v143 -A x64 -DCMAKE_BUILD_TYPE:STRING=Release
+& $cmake --build .\build\x64 --config Release --target GenerateSohOtr
+& $cmake --build .\build\x64 --config Release --parallel
+```
+
+The Release executable is written to `x64\Release\soh.exe`. `GenerateSohOtr`
+writes `soh.o2r`; ensure the runtime directory also contains the valid `oot.o2r`
+generated from the verified ROM. Build output and generated archives are ignored.
+
+Desktop shortcuts currently identify the two runtimes:
+
+- `Ocarina of Time - Stable`
+- `Ocarina of Time - Lighting Dev`
 
 ## Current 3DS-Style Graphics Setup
 
