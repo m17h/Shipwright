@@ -135,13 +135,22 @@ Current stable-runtime installation:
 - Signed standard ReShade 6.8.0 build, loaded through ignored `d3d11.dll`.
 - Active runtime preset: ignored `x64\Release\ReShadePreset.ini` (ReShade's
   first-run default name).
-- Version-controlled preset source: `docs\reshade\OoT-Stable.ini`.
+- Version-controlled enhanced preset source: `docs\reshade\OoT-Stable.ini`.
+- Lightweight fallback preset: `docs\reshade\OoT-Clean-120.ini`.
 - Shader sources: the official indexed `crosire/reshade-shaders` slim package
   at commit `6db142b4b1a05c764222e5b0bd9a644b7ccfe1dc` and Marty McFly's qUINT package
   at commit `98fed77b26669202027f575a6d8f590426c21ebd`.
-- Enabled effects, in order: qUINT Lightroom, qUINT Bloom, qUINT DELC Sharpen.
-- MXAO, SSR, depth of field, and other expensive or depth-dependent effects are
-  installed but disabled until depth-buffer behavior and performance are tuned.
+- Enhanced enabled effects, in order: qUINT MXAO, qUINT SSR, qUINT Debanding,
+  qUINT Lightroom, qUINT Bloom, and qUINT DELC Sharpen. The MXAO build enables
+  indirect lighting, smooth reconstructed normals, and two AO scales through
+  ReShade preprocessor definitions. Depth of field remains disabled for normal
+  gameplay because it obscures the scene and HUD.
+- ReShade 6 preset activation keys must be at the top level of the preset. Do
+  not put `Techniques` or `TechniqueSorting` under a `[GENERAL]` section; ReShade
+  will leave the real top-level `Techniques=` empty and no effects will run.
+- DirectX 11 depth was visually calibrated on 2026-09-18 with DisplayDepth. The
+  buffer is upright, non-reversed, non-logarithmic, and shows correct scene
+  normals; keep all three corresponding depth flags at `0`.
 - Press `Home` while the stable game is running to open the ReShade overlay.
 - Stable runtime interpolation is explicitly set to 120 FPS with
   `gSettings.InterpolationFPS=120` and `gSettings.MatchRefreshRate=0`. VSync
@@ -149,11 +158,11 @@ Current stable-runtime installation:
   does not clamp the 120 FPS target. This changes visual frame presentation,
   while the game simulation remains at its original 20 Hz.
 - ReShade's FPS counter reports presented/rendered frames, not the 20 Hz game
-  logic tick. A steady 20 FPS there means interpolation is not active. The
-  stable runtime's ReShade overlay was visually verified at 120 FPS on
-  2026-09-18 with the preset active.
+  logic tick. A steady 20 FPS there means interpolation is not active. With the
+  enhanced six-effect preset active, Shipwright's built-in statistics window
+  reported 119.0 FPS / 9.194 ms on 2026-09-18.
 - The 2026-09-18 test on the RTX 4070 Ti SUPER loaded ReShade 6.8.0.2158 and
-  compiled all three enabled effects successfully. The generated search paths
+  compiled all six enhanced effects successfully. The generated search paths
   must end in one `**`; the installer's `**\**` form failed on this version.
 
 - Do not commit or redistribute the ReShade injector or third-party shader
