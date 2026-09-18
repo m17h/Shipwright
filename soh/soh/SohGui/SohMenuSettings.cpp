@@ -378,6 +378,13 @@ void SohMenu::AddMenuSettings() {
                 .Max(8)
                 .DefaultValue(1));
 #endif
+    AddWidget(path, "Native post-processing (experimental)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_NATIVE_POST_PROCESSING)
+        .RaceDisable(false)
+        .Options(CheckboxOptions()
+                     .Tooltip("Runs the game image through Shipwright's native post-processing pipeline. The current "
+                              "foundation pass is visually neutral and supported only by DirectX 11.")
+                     .DefaultValue(false));
     auto fps = CVarGetInteger(CVAR_SETTING("InterpolationFPS"), 20);
     const char* fpsFormat = fps == 20 ? "Original (%d)" : "%d";
     AddWidget(path, "Current FPS", WIDGET_CVAR_SLIDER_INT)

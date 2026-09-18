@@ -28,6 +28,19 @@ or other game logic to the render frame rate.
 - Pull requests, when requested, must target the user's fork.
 - Before pushing or creating a pull request, verify remotes and the destination.
 
+The renderer is maintained through the nested `libultraship` Git submodule:
+
+- Local folder: `libultraship`
+- User fork: `https://github.com/m17h/libultraship`
+- Development branch: `graphics/native-lighting`
+- `origin` fetch/push must point to the user fork.
+- `upstream` may fetch from `https://github.com/kenix3/libultraship.git`.
+- `upstream` push must remain disabled (`DISABLED`).
+- `remote.pushDefault` must remain `origin`.
+- Commit and push renderer changes in the submodule first, then commit the new
+  submodule pointer in Shipwright. Do not leave the parent repository pointing
+  at a submodule commit that is unavailable from the user fork.
+
 ## Two-Folder Workflow
 
 Do not make the user manually switch branches in one directory. The two Git
@@ -53,6 +66,9 @@ worktrees have distinct purposes:
 - Remote tracking branch: `origin/graphics/native-lighting`
 - Purpose: isolated renderer, shader, shadow, lighting, fog, and post-processing
   development.
+- The nested `libultraship` checkout uses its own `graphics/native-lighting`
+  branch for renderer work and is backed by the user's `m17h/libultraship`
+  fork.
 - Build and run a separate executable from this folder.
 - Do not install ReShade here by default. Evaluate native rendering with ReShade
   disabled so external post-processing cannot hide regressions.
@@ -198,6 +214,23 @@ incremental direction is:
 6. Optional cel-shaded and more natural lighting presets.
 7. Later material improvements such as normal and roughness maps where assets
    support them.
+
+Initial foundation status as of 2026-09-18:
+
+- The DX11 backend has a disabled-by-default native identity post-processing
+  pass controlled by `gSettings.NativePostProcessing`.
+- Enabling the pass forces an off-screen game target, resolves MSAA when needed,
+  runs a full-screen shader into a presentation texture, and leaves ImGui menus
+  outside the processed image.
+- OpenGL and Metal currently use the unchanged fallback path.
+- The lighting runtime's ignored configuration enables the identity pass for
+  development testing.
+- A Release build succeeded, and an enabled DirectX 11 run logged the identity
+  pass at 640x480 without runtime errors. A separate 4x MSAA run also passed,
+  exercising the resolve-before-process path. This is not yet a
+  visual-equivalence or long-duration stability result.
+- Detailed status, test coverage, and the next milestones are recorded in
+  `docs\NATIVE_LIGHTING.md`.
 
 Prefer small, toggleable stages with before/after validation. Preserve original
 rendering as a fallback. Do not merge experimental renderer work into `develop`
